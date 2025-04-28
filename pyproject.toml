@@ -1,6 +1,6 @@
 [project]
 name = "rate-keeper"
-version = "0.1.0"
+version = "0.1.1"
 description = "Add your description here"
 authors = [{ name = "ftnfurina", email = "ftnfurina@gmail.com" }]
 dependencies = ["requests>=2.32.3"]
@@ -45,5 +45,5 @@ allow-direct-references = true
 packages = ["src/rate_keeper"]
 
 [tool.hatch.build]
-include = ["src", "LICENSE"]
+include = ["src", "LICENSE", "README_ZH.md", "README.md"]
 exclude = ["__pycache__"]
