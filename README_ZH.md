@@ -8,15 +8,15 @@
   </p>
 </div>
 
-**Rate Keeper: Used to limit function call frequency. It ensures your function is called evenly within the limit rather than being called intensively in a short time. Moreover, it can dynamically adjust the call frequency based on remaining calls and time.**
+**频率守护器：用于限制函数调用频率。它能确保您的函数在限制范围内均匀调用，而不是在短时间内被密集调用。此外，它还能根据剩余调用次数和时间动态调整调用频率。**
 
-## Installation
+## 安装
 
 ```shell
 pip install rate-keeper
 ```
 
-## Quick Start
+## 快速开始
 
 ```python
 from rate_keeper import RateKeeper
@@ -42,7 +42,7 @@ if __name__ == "__main__":
 # Requesting https://www.example.com/5, RateKeeper(limit=3, period=1, used=2, reset=55983.906), 0.50
 ```
 
-## Dynamic Adjust
+## 动态调整
 
 ```python
 from typing import Dict

@@ -1,0 +1,49 @@
+[project]
+name = "rate-keeper"
+version = "0.1.0"
+description = "Add your description here"
+authors = [{ name = "ftnfurina", email = "ftnfurina@gmail.com" }]
+dependencies = ["requests>=2.32.3"]
+readme = "README.md"
+requires-python = ">= 3.8"
+keywords = ["rate-limiter", "api-rate-limiting", "api-throttling"]
+license = { text = "MIT" }
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Utilities",
+]
+
+[project.urls]
+Homepage = "https://github.com/ftnfurina/rate-keeper#readme"
+Source = "https://github.com/ftnfurina/rate-keeper"
+Tracker = "https://github.com/ftnfurina/rate-keeper/issues"
+
+[build-system]
+requires = ["hatchling==1.26.3"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = ["pytest>=8.3.5", "requests>=2.32.3"]
+
+[tool.rye.scripts]
+rate-keeper = "python"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rate_keeper"]
+
+[tool.hatch.build]
+include = ["src", "LICENSE"]
+exclude = ["__pycache__"]

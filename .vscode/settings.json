@@ -1,0 +1,11 @@
+{
+  "cSpell.words": [
+    "ftnfurina",
+    "pytest",
+    "pycache"
+  ],
+  "cSpell.ignorePaths": [
+    ".*",
+    "*.lock"
+  ]
+}

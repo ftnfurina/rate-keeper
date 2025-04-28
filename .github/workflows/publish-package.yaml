@@ -1,0 +1,59 @@
+name: Publish package to PyPI
+
+on:
+  release:
+    types: [created]
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+    name: Python ${{ matrix.python-version }} test
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Install rye
+        uses: eifinger/setup-rye@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version: "latest"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: rye pin ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: rye sync --no-lock
+
+      - name: Test package
+        run: rye test -v
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Install rye
+        uses: eifinger/setup-rye@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version: "latest"
+
+      - name: Install dependencies
+        run: rye sync --no-lock --no-dev
+
+      - name: Build package
+        run: rye build
+
+      - name: Publish package
+        run: rye publish --token ${{ secrets.PYPI_PUBLISH_TOKEN }} --yes
