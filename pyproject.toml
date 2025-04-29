@@ -1,7 +1,7 @@
 [project]
 name = "rate-keeper"
-version = "0.2.0"
-description = "Add your description here"
+version = "0.2.1"
+description = "Used to limit function call frequency. It ensures your function is called evenly within the limit rather than being called intensively in a short time."
 authors = [{ name = "ftnfurina", email = "ftnfurina@gmail.com" }]
 dependencies = ["requests>=2.32.3"]
 readme = "README.md"
