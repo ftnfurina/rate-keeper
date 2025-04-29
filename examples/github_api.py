@@ -39,7 +39,7 @@ def create_headers(token: str) -> Dict[str, str]:
     }
 
 
-print(rate_keeper)
+print(rate_keeper, f"{rate_keeper.recommend_delay:.2f}")
 response = fetch("GET", "https://api.github.com/user", create_headers("github_token"))
 print(response.json())
-print(rate_keeper)
+print(rate_keeper, f"{rate_keeper.recommend_delay:.2f}")

@@ -54,6 +54,7 @@ class RateKeeper:
 
         self._reset = clock() + period
         self._used = 0
+        self._delay_time = 0
 
         self._lock = threading.RLock()
 
@@ -92,6 +93,15 @@ class RateKeeper:
         :return: Reset time (seconds)
         """
         return self._reset
+
+    @property
+    def delay_time(self) -> float:
+        """
+        Get current delay time.
+
+        :return: Delay time (seconds)
+        """
+        return self._delay_time
 
     @_synchronized
     def update_limit(self, limit: int) -> None:
@@ -179,10 +189,10 @@ class RateKeeper:
         def wrapper(*args, **kwargs):
             with self._lock:
                 # Add delay
+                self._delay_time = self.recommend_delay
                 if self.auto_sleep:
-                    delay_time = self.recommend_delay
-                    if delay_time > 0:
-                        time.sleep(delay_time)
+                    if self._delay_time > 0:
+                        time.sleep(self._delay_time)
 
                 # Reset counter
                 if self.remaining_period == 0:

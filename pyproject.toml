@@ -1,6 +1,6 @@
 [project]
 name = "rate-keeper"
-version = "0.1.1"
+version = "0.2.0"
 description = "Add your description here"
 authors = [{ name = "ftnfurina", email = "ftnfurina@gmail.com" }]
 dependencies = ["requests>=2.32.3"]

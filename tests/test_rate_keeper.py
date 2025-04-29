@@ -57,6 +57,12 @@ def test_recommend_delay():
     assert rate_keeper.recommend_delay <= 0.5, "recommend_delay should be less than 0.5"
 
 
+def test_delay_time():
+    rate_keeper = RateKeeper(limit=2, period=1, auto_sleep=False)
+
+    assert rate_keeper.delay_time == 0, "delay_time should be 0"
+
+
 def test_update_limit():
     rate_keeper = RateKeeper(limit=2, period=1, auto_sleep=False)
     assert rate_keeper._limit == 2, "limit should be 2"

@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     @rate_keeper.decorator
     def request(url: str) -> str:
-        print(f"Requesting {url}, {rate_keeper}, {rate_keeper.recommend_delay:.2f}")
+        print(url, rate_keeper, f"{rate_keeper.delay_time:.2f}")
 
     count = 0
     while count < 6:
@@ -34,21 +34,23 @@ if __name__ == "__main__":
         count += 1
 
 # Output:
-# Requesting https://www.example.com/0, RateKeeper(limit=3, period=1, used=1, reset=55981.89), 0.50
-# Requesting https://www.example.com/1, RateKeeper(limit=3, period=1, used=2, reset=55981.89), 0.50
-# Requesting https://www.example.com/2, RateKeeper(limit=3, period=1, used=1, reset=55982.89), 0.50
-# Requesting https://www.example.com/3, RateKeeper(limit=3, period=1, used=2, reset=55982.89), 0.50
-# Requesting https://www.example.com/4, RateKeeper(limit=3, period=1, used=1, reset=55983.906), 0.50
-# Requesting https://www.example.com/5, RateKeeper(limit=3, period=1, used=2, reset=55983.906), 0.50
+# https://www.example.com/0 RateKeeper(limit=3, period=1, used=1, reset=89614.39) 0.00
+# https://www.example.com/1 RateKeeper(limit=3, period=1, used=2, reset=89614.39) 0.50
+# https://www.example.com/2 RateKeeper(limit=3, period=1, used=1, reset=89615.406) 0.48
+# https://www.example.com/3 RateKeeper(limit=3, period=1, used=2, reset=89615.406) 0.50
+# https://www.example.com/4 RateKeeper(limit=3, period=1, used=1, reset=89616.421) 0.49
+# https://www.example.com/5 RateKeeper(limit=3, period=1, used=2, reset=89616.421) 0.50
 ```
 
 ## 动态调整
 
 ```python
+from datetime import datetime, timezone
 from typing import Dict
+
 import requests
 from requests import Response
-from datetime import datetime, timezone
+
 from rate_keeper import RateKeeper
 
 timestamp_clock = datetime.now(timezone.utc).timestamp
@@ -79,18 +81,18 @@ def fetch(
 def create_headers(token: str) -> Dict[str, str]:
     return {
         "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "Follower Bot",
+        "User-Agent": "Python requests GitHub API",
         "Authorization": f"token {token}",
     }
 
 
-print(rate_keeper)
+print(rate_keeper, f"{rate_keeper.recommend_delay:.2f}")
 response = fetch("GET", "https://api.github.com/user", create_headers("github_token"))
 print(response.json())
-print(rate_keeper)
+print(rate_keeper, f"{rate_keeper.recommend_delay:.2f}")
 
 # Output:
-# RateKeeper(limit=5000, period=3600, used=0, reset=1745863571.523727)
+# RateKeeper(limit=5000, period=3600, used=0, reset=1745897378.901664) 0.00
 # {'message': 'Bad credentials', 'documentation_url': 'https://docs.github.com/rest', 'status': '401'}
-# RateKeeper(limit=60, period=3600, used=7, reset=1745862671)
+# RateKeeper(limit=60, period=3600, used=3, reset=1745896988) 56.30
 ```
