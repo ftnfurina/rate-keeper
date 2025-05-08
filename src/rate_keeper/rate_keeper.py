@@ -1,8 +1,13 @@
+import logging
 import sys
 import threading
 import time
 from functools import wraps
 from typing import Callable
+
+LOGGER_NAME = "rate_keeper"
+
+logger = logging.getLogger(LOGGER_NAME)
 
 # Prefer time.monotonic if available, otherwise fall back to time.time
 clock = time.monotonic if hasattr(time, "monotonic") else time.time
@@ -58,6 +63,8 @@ class RateKeeper:
 
         self._lock = threading.RLock()
 
+        logger.info(f"RateKeeper initialized: {self}")
+
     @property
     def limit(self) -> int:
         """
@@ -110,7 +117,9 @@ class RateKeeper:
 
         :param limit: New call limit
         """
+        old_limit = self._limit
         self._limit = max(1, min(sys.maxsize, limit))
+        logger.debug(f"RateKeeper 'limit' updated: {old_limit} -> {self._limit}")
 
     @_synchronized
     def update_period(self, period: int) -> None:
@@ -119,7 +128,9 @@ class RateKeeper:
 
         :param period: New limit period (seconds)
         """
+        old_period = self._period
         self._period = max(1, period)
+        logger.debug(f"RateKeeper 'period' updated: {old_period} -> {self._period}")
 
     @_synchronized
     def update_used(self, used: int) -> None:
@@ -128,7 +139,9 @@ class RateKeeper:
 
         :param used: New used call count
         """
+        old_used = self._used
         self._used = max(0, min(self._limit, used))
+        logger.debug(f"RateKeeper 'used' updated: {old_used} -> {self._used}")
 
     @_synchronized
     def update_reset(self, reset: float) -> None:
@@ -137,7 +150,9 @@ class RateKeeper:
 
         :param reset: New reset time (seconds)
         """
+        old_reset = self._reset
         self._reset = max(self.clock(), reset)
+        logger.debug(f"RateKeeper 'reset' updated: {old_reset} -> {self._reset}")
 
     @property
     def remaining_period(self) -> float:
@@ -192,15 +207,22 @@ class RateKeeper:
                 self._delay_time = self.recommend_delay
                 if self.auto_sleep:
                     if self._delay_time > 0:
+                        logger.info(f"Auto sleeping for {self._delay_time:.2f} seconds")
                         time.sleep(self._delay_time)
 
                 # Reset counter
                 if self.remaining_period == 0:
+                    old_reset = self._reset
                     self._used = 0
                     self._reset = self.clock() + self._period
+                    logger.debug(
+                        f"RateKeeper counter reset: {old_reset:.2f} -> {self._reset:.2f}"
+                    )
 
                 self._used += 1
-
+                logger.debug(
+                    f"Calling function {func.__name__}. Current used: {self._used}/{self._limit}"
+                )
                 return func(*args, **kwargs)
 
         return wrapper

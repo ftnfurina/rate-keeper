@@ -38,9 +38,9 @@ def test_remaining_period():
 
     test_func("hello")
     time.sleep(0.5)
-    assert rate_keeper.remaining_period <= 0.5, (
-        "remaining_period should be less than 0.5"
-    )
+    assert (
+        rate_keeper.remaining_period <= 0.5
+    ), "remaining_period should be less than 0.5"
 
 
 def test_recommend_delay():
@@ -106,9 +106,9 @@ def test_update_used():
 def test_update_reset():
     rate_keeper = RateKeeper(limit=2, period=1, auto_sleep=False)
 
-    assert rate_keeper.reset >= clock(), (
-        "reset should be greater than or equal to clock"
-    )
+    assert (
+        rate_keeper.reset >= clock()
+    ), "reset should be greater than or equal to clock"
 
     reset = clock() + 100
 
