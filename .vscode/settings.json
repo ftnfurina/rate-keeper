@@ -1,9 +1,10 @@
 {
   "cSpell.words": [
     "ftnfurina",
-    "pytest",
+    "levelname",
     "pycache",
-    "levelname"
+    "pytest",
+    "setattr"
   ],
   "cSpell.ignorePaths": [
     ".*",

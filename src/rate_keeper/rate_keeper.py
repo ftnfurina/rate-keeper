@@ -74,6 +74,18 @@ class RateKeeper:
         """
         return self._limit
 
+    @limit.setter
+    @_synchronized
+    def limit(self, limit: int) -> None:
+        """
+        Set call limit.
+
+        :param limit: Call limit
+        """
+        old_limit = self._limit
+        self._limit = max(1, min(sys.maxsize, limit))
+        logger.debug(f"RateKeeper 'limit' updated: {old_limit} -> {self._limit}")
+
     @property
     def period(self) -> int:
         """
@@ -82,6 +94,18 @@ class RateKeeper:
         :return: Limit period (seconds)
         """
         return self._period
+
+    @period.setter
+    @_synchronized
+    def period(self, period: int) -> None:
+        """
+        Set limit period.
+
+        :param period: New limit period (seconds)
+        """
+        old_period = self._period
+        self._period = max(1, period)
+        logger.debug(f"RateKeeper 'period' updated: {old_period} -> {self._period}")
 
     @property
     def used(self) -> int:
@@ -92,6 +116,18 @@ class RateKeeper:
         """
         return self._used
 
+    @used.setter
+    @_synchronized
+    def used(self, used: int) -> None:
+        """
+        Set used call count.
+
+        :param used: New used call count
+        """
+        old_used = self._used
+        self._used = max(0, min(self._limit, used))
+        logger.debug(f"RateKeeper 'used' updated: {old_used} -> {self._used}")
+
     @property
     def reset(self) -> float:
         """
@@ -100,6 +136,18 @@ class RateKeeper:
         :return: Reset time (seconds)
         """
         return self._reset
+
+    @reset.setter
+    @_synchronized
+    def reset(self, reset: float) -> None:
+        """
+        Set counter reset time.
+
+        :param reset: New reset time (seconds)
+        """
+        old_reset = self._reset
+        self._reset = max(self.clock(), reset)
+        logger.debug(f"RateKeeper 'reset' updated: {old_reset} -> {self._reset}")
 
     @property
     def delay_time(self) -> float:
@@ -110,49 +158,29 @@ class RateKeeper:
         """
         return self._delay_time
 
-    @_synchronized
     def update_limit(self, limit: int) -> None:
         """
-        Update call limit.
-
-        :param limit: New call limit
+        Deprecated. Use 'limit' property instead.
         """
-        old_limit = self._limit
-        self._limit = max(1, min(sys.maxsize, limit))
-        logger.debug(f"RateKeeper 'limit' updated: {old_limit} -> {self._limit}")
+        self.limit = limit
 
-    @_synchronized
     def update_period(self, period: int) -> None:
         """
-        Update limit period.
-
-        :param period: New limit period (seconds)
+        Deprecated. Use 'period' property instead.
         """
-        old_period = self._period
-        self._period = max(1, period)
-        logger.debug(f"RateKeeper 'period' updated: {old_period} -> {self._period}")
+        self.period = period
 
-    @_synchronized
     def update_used(self, used: int) -> None:
         """
-        Update used call count.
-
-        :param used: New used call count
+        Deprecated. Use 'used' property instead.
         """
-        old_used = self._used
-        self._used = max(0, min(self._limit, used))
-        logger.debug(f"RateKeeper 'used' updated: {old_used} -> {self._used}")
+        self.used = used
 
-    @_synchronized
     def update_reset(self, reset: float) -> None:
         """
-        Update counter reset time.
-
-        :param reset: New reset time (seconds)
+        Deprecated. Use 'reset' property instead.
         """
-        old_reset = self._reset
-        self._reset = max(self.clock(), reset)
-        logger.debug(f"RateKeeper 'reset' updated: {old_reset} -> {self._reset}")
+        self.reset = reset
 
     @property
     def remaining_period(self) -> float:

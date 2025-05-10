@@ -38,9 +38,9 @@ def test_remaining_period():
 
     test_func("hello")
     time.sleep(0.5)
-    assert (
-        rate_keeper.remaining_period <= 0.5
-    ), "remaining_period should be less than 0.5"
+    assert rate_keeper.remaining_period <= 0.5, (
+        "remaining_period should be less than 0.5"
+    )
 
 
 def test_recommend_delay():
@@ -65,57 +65,57 @@ def test_delay_time():
 
 def test_update_limit():
     rate_keeper = RateKeeper(limit=2, period=1, auto_sleep=False)
-    assert rate_keeper._limit == 2, "limit should be 2"
+    assert rate_keeper.limit == 2, "limit should be 2"
 
-    rate_keeper.update_limit(3)
-    assert rate_keeper._limit == 3, "limit should be 3"
+    rate_keeper.limit = 3
+    assert rate_keeper.limit == 3, "limit should be 3"
 
-    rate_keeper.update_limit(-1)
-    assert rate_keeper._limit == 1, "limit should be 1"
+    rate_keeper.limit = -1
+    assert rate_keeper.limit == 1, "limit should be 1"
 
-    rate_keeper.update_limit(sys.maxsize)
-    assert rate_keeper._limit == sys.maxsize, "limit should be sys.maxsize"
+    rate_keeper.limit = sys.maxsize
+    assert rate_keeper.limit == sys.maxsize, "limit should be sys.maxsize"
 
 
 def test_update_period():
     rate_keeper = RateKeeper(limit=2, period=1, auto_sleep=False)
-    assert rate_keeper._period == 1, "period should be 1"
+    assert rate_keeper.period == 1, "period should be 1"
 
-    rate_keeper.update_period(2)
-    assert rate_keeper._period == 2, "period should be 2"
+    rate_keeper.period = 2
+    assert rate_keeper.period == 2, "period should be 2"
 
-    rate_keeper.update_period(-1)
-    assert rate_keeper._period == 1, "period should be 1"
+    rate_keeper.period = -1
+    assert rate_keeper.period == 1, "period should be 1"
 
 
 def test_update_used():
     rate_keeper = RateKeeper(limit=2, period=1, auto_sleep=False)
 
-    assert rate_keeper._used == 0, "used should be 0"
+    assert rate_keeper.used == 0, "used should be 0"
 
-    rate_keeper.update_used(1)
-    assert rate_keeper._used == 1, "used should be 1"
+    rate_keeper.used = 1
+    assert rate_keeper.used == 1, "used should be 1"
 
-    rate_keeper.update_used(3)
-    assert rate_keeper._used == 2, "used should less than or equal to limit"
+    rate_keeper.used = 3
+    assert rate_keeper.used == 2, "used should less than or equal to limit"
 
-    rate_keeper.update_used(-1)
-    assert rate_keeper._used == 0, "used should be 0"
+    rate_keeper.used = -1
+    assert rate_keeper.used == 0, "used should be 0"
 
 
 def test_update_reset():
     rate_keeper = RateKeeper(limit=2, period=1, auto_sleep=False)
 
-    assert (
-        rate_keeper.reset >= clock()
-    ), "reset should be greater than or equal to clock"
+    assert rate_keeper.reset >= clock(), (
+        "reset should be greater than or equal to clock"
+    )
 
     reset = clock() + 100
 
-    rate_keeper.update_reset(reset)
+    rate_keeper.reset = reset
     assert rate_keeper.reset == reset, "reset should be next_reset"
 
-    rate_keeper.update_reset(clock() - 100)
+    rate_keeper.reset = clock() - 100
     assert rate_keeper.reset <= clock(), "reset should be greater than clock"
 
 
@@ -136,21 +136,21 @@ def test_auto_sleep():
 def test_minimum_calls_and_period():
     rate_keeper = RateKeeper(limit=0, period=0)
 
-    assert rate_keeper._limit == 1, "calls should be 1"
-    assert rate_keeper._period == 1, "period should be 1"
+    assert rate_keeper.limit == 1, "calls should be 1"
+    assert rate_keeper.period == 1, "period should be 1"
 
 
 def test_maximum_calls():
     rate_keeper = RateKeeper(limit=sys.maxsize)
 
-    assert rate_keeper._limit == sys.maxsize, "calls should be sys.maxsize"
+    assert rate_keeper.limit == sys.maxsize, "calls should be sys.maxsize"
 
 
 def test_negative_calls_and_period():
     rate_keeper = RateKeeper(limit=-1, period=-1)
 
-    assert rate_keeper._limit == 1, "calls should be 1"
-    assert rate_keeper._period == 1, "period should be 1"
+    assert rate_keeper.limit == 1, "calls should be 1"
+    assert rate_keeper.period == 1, "period should be 1"
 
 
 def test_thread_safety():
