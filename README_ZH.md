@@ -53,7 +53,12 @@ from requests import Response
 
 from rate_keeper import RateKeeper
 
-timestamp_clock = datetime.now(timezone.utc).timestamp
+
+# UTC timestamp clock
+def timestamp_clock():
+    return datetime.now(timezone.utc).timestamp()
+
+
 rate_keeper = RateKeeper(limit=5000, period=3600, clock=timestamp_clock)
 
 
